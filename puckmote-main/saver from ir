@@ -1,0 +1,38 @@
+<html>
+<head>
+</head>
+<body>
+<script src="https://www.espruino.com/js/uart.js"></script>
+<script>
+// Output debug info about received data to the console
+UART.debug = 3;
+
+// Define a variable to store the received data
+var receivedData = "";
+
+// Function to handle received data
+function handleData(data) {
+    console.log("Received", JSON.stringify(data));
+    // If getData uses console.log rather than Bluetooth.println,
+    // it'll cause a prompt to be written at the end of the output
+    // we detect that here are remove it.
+    if (data.endsWith(">")) data = data.slice(0, -1);
+    receivedData = data; // Store the received data in the variable
+}
+
+// Actually get the data from Espruino
+function getData() {
+    UART.write('\x03\x10getData()\n', handleData);
+}
+
+// Save the received data to localStorage
+function saveDataToLocalStorage() {
+    localStorage.setItem("IRFunctionData", receivedData);
+    console.log("Data saved to localStorage:", receivedData);
+}
+</script>
+
+<button onclick="getData()">Get Data</button>
+<button onclick="saveDataToLocalStorage()">Save Data to LocalStorage</button>
+</body>
+</html>

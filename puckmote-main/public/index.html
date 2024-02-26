@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <!-- 
+    Source code: 
+      https://github.com/benfoxall/puckmote
+
+    PRs welcome!
+  -->
+  <meta charset="UTF-8" />
+  <title>Puckmote</title>
+  <meta name="Description" content="A TV remote, in case your other one is out of battery." />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#000000" />
+  <link rel="manifest" href="%PUBLIC_URL%manifest.webmanifest" />
+  <link rel="apple-touch-icon" href="%PUBLIC_URL%images/icon-512.png" />
+  <link rel="stylesheet" href="%PUBLIC_URL%style.css" />
+</head>
+
+<body class="bg-gray-100 dark:bg-black dark:text-gray-200">
+  <div id="root"></div>
+
+  <script src="https://www.puck-js.com/puck.js"></script>
+  <script type="module" src="./_dist_/index.js"></script>
+
+  <script>
+    if ("serviceWorker" in navigator) {
+      window.addEventListener("load", () => {
+        navigator.serviceWorker.register("%PUBLIC_URL%sw.js");
+      });
+    }
+  </script>
+
+  <label for="input1">Input 1 (Name):</label>
+  <input type="text" id="input1"><br><br>
+
+  <label for="input2">Input 2 (Device):</label>
+  <input type="text" id="input2"><br><br>
+
+  <label for="input3">Input 3 (IR Function):</label>
+  <input type="text" id="input3"><br><br>
+
+  <button id="submitButton" onclick="createButton()">Submit</button><br><br>
+
+  <script>
+    // Load existing buttons from local storage
+    window.onload = function() {
+      var savedButtons = JSON.parse(localStorage.getItem("buttons")) || [];
+      savedButtons.forEach(function(buttonDetails) {
+        createButton(buttonDetails.name, buttonDetails.device, buttonDetails.irFunction);
+      });
+    };
+
+    function createButton(name, device, irFunction) {
+      // Get input values if not provided
+      if (!name) name = document.getElementById("input1").value;
+      if (!device) device = document.getElementById("input2").value;
+      if (!irFunction) irFunction = document.getElementById("input3").value;
+
+      // Create a new button element
+      var newButton = document.createElement("button");
+      var deleteButton = document.createElement("button");
+
+      // Set button attributes
+      newButton.id = name + "_" + device;
+      newButton.innerHTML = name + " - " + device;
+      deleteButton.innerHTML = "X";
+
+      // Set button onclick function
+      newButton.onclick = function() {
+        sendIR(irFunction);
+      };
+
+      deleteButton.onclick = function() {
+        // Remove button from DOM
+        newButton.remove();
+        deleteButton.remove();
+        
+        // Remove button details from local storage
+        var savedButtons = JSON.parse(localStorage.getItem("buttons")) || [];
+        savedButtons = savedButtons.filter(function(button) {
+          return button.name !== name && button.device !== device && button.irFunction !== irFunction;
+        });
+        localStorage.setItem("buttons", JSON.stringify(savedButtons));
+      };
+
+      // Append buttons to the body
+      document.body.appendChild(newButton);
+      document.body.appendChild(deleteButton);
+
+      // Save button details to local storage
+      var savedButtons = JSON.parse(localStorage.getItem("buttons")) || [];
+      savedButtons.push({ name: name, device: device, irFunction: irFunction });
+      localStorage.setItem("buttons", JSON.stringify(savedButtons));
+
+      // Clear input fields
+      document.getElementById("input1").value = "";
+      document.getElementById("input2").value = "";
+      document.getElementById("input3").value = "";
+    }
+
+  /*  function sendIR(irFunction) {
+      // Code to send IR function goes here
+      alert("Sending IR Function: " + irFunction);
+    } 
+    */
+  </script>
+</body>
+
+</html>
