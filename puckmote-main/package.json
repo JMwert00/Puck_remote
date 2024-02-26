@@ -8,7 +8,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/benfoxall/puckmote.git"
+    "url": "git+https://github.com/JMwert00/puckmote.git"
   },
   "postcss": {
     "plugins": {
@@ -16,12 +16,12 @@
       "autoprefixer": {}
     }
   },
-  "author": "Ben Foxall",
+  "author": "JMWert00",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/benfoxall/puckmote/issues"
+    "url": "https://github.com/benfoxall/JMwert00/issues"
   },
-  "homepage": "https://github.com/benfoxall/puckmote#readme",
+  "homepage": "https://github.com/JMwert00/puckmote#readme",
   "devDependencies": {
     "@snowpack/plugin-postcss": "^1.2.2",
     "@snowpack/plugin-react-refresh": "^2.5.0",
